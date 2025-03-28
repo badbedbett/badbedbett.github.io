@@ -1,3 +1,4 @@
+// src/view/task-list-component.js
 import {createElement} from '../framework/render.js';
 
 function createTaskListComponentTemplate(title) {
