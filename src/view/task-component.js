@@ -1,3 +1,4 @@
+// src/view/task-component.js
 import {createElement} from '../framework/render.js';
 
 function createTaskComponentTemplate(taskText) {
