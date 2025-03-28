@@ -1,4 +1,3 @@
-// src/view/header-component.js
 import {createElement} from '../framework/render.js';
 
 function createHeaderComponentTemplate() {
