@@ -1,3 +1,4 @@
+// src/view/taskboard-component.js
 import {createElement} from '../framework/render.js';
 
 function createTaskboardComponentTemplate() {
