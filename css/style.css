@@ -148,7 +148,7 @@ h2 {
 
 .clear-btn {
     background: #d32f2f;
-    position: absolute;
+    display: flex;
     bottom: 15px;
     left: 15px;
     right: 15px;
