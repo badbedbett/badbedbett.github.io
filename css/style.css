@@ -81,6 +81,9 @@ header {
     box-sizing: border-box;
 }
 
+li {
+    list-style: none;
+}
 
 .task-columns {
     display: flex;
@@ -112,9 +115,9 @@ h2 {
 }
 
 .backlog h2 { background: #cfd8dc; color: #546e7a; }
-.in-progress h2 { background: #90caf9; color: #1976d2; }
+.processing h2 { background: #90caf9; color: #1976d2; }
 .done h2 { background: #a5d6a7; color: #388e3c; }
-.trash h2 { background: #ffcccb; color: #c62828; }
+.basket h2 { background: #ffcccb; color: #c62828; }
 
 .task {
     display: flex;
@@ -139,9 +142,9 @@ h2 {
 }
 
 .backlog .task::before { background: #cfd8dc; }
-.in-progress .task::before { background: #90caf9; }
+.processing .task::before { background: #90caf9; }
 .done .task::before { background: #a5d6a7; }
-.trash .task::before { background: #ffcccb; }
+.basket .task::before { background: #ffcccb; }
 
 .clear-btn {
     background: #d32f2f;

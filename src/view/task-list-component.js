@@ -1,28 +1,31 @@
 // src/view/task-list-component.js
 import {createElement} from '../framework/render.js';
+import { StatusLabel } from '../const.js';
 
-function createTaskListComponentTemplate(title) {
+function createTaskListTemplate(status) {
+  const statusLabel = StatusLabel[status];
   return (
-    `<div class="column">
-      <h2>${title}</h2>
-    </div>`
+    `<section class="taskboard__list ${status}">
+      <h2 class="task-title ${status}">${statusLabel}</h2>
+      <ul class="task-list"></ul>
+    </section>`
   );
 }
 
 export default class TaskListComponent {
-  constructor(title) {
-    this.title = title;
+
+  constructor (status) {
+    this.status = status;
   }
 
   getTemplate() {
-    return createTaskListComponentTemplate(this.title);
+    return createTaskListTemplate(this.status);
   }
 
   getElement() {
     if (!this.element) {
       this.element = createElement(this.getTemplate());
     }
-
     return this.element;
   }
 
