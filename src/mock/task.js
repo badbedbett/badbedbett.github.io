@@ -17,12 +17,12 @@ export const tasks = [
   {
     id: "4",
     title: "Выучить JS",
-    status: "processing"
+    status: "backlog"
   },
   {
     id: "5",
     title: "Выучить React",
-    status: "processing"
+    status: "backlog"
   },
   {
     id: "6",

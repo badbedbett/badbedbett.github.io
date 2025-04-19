@@ -166,10 +166,15 @@ h2 {
 
 .board__no-tasks {
     text-align: center;
-    font-size: 20px;
-    color: #777;
-    padding: 20px;
-}
+    font-size: 16px;
+    color: #999;
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    border: 1px dashed #ccc;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 
 @media (max-width: 768px) {
     header {
