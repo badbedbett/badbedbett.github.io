@@ -1,10 +1,9 @@
+// src/main.js
 import HeaderComponent from './view/header-component.js';
 import FormAddTaskComponent from './view/form-task-add-component.js';
 import TasksBoardPresenter from './presenter/tasks-board-presenter.js';
 import TasksModel from './model/task-model.js';
 import {render, RenderPosition} from './framework/render.js';
-
-
 
 const bodyContainer = document.querySelector('.board-app');
 const formContainer = document.querySelector('.add-task');
@@ -18,6 +17,21 @@ const tasksBoardPresenter = new TasksBoardPresenter({
 });
 
 render(new HeaderComponent(), bodyContainer, RenderPosition.BEFOREBEGIN);
-render(new FormAddTaskComponent(), formContainer);
 
+function handleNewTaskFormSubmit(taskTitle) {
+  tasksBoardPresenter.createTask(taskTitle);
+
+  const inputField = formContainer.querySelector('#add-task');
+  if (inputField) {
+    inputField.value = '';
+  } else {
+    console.error('Could not find input field #add-task to clear.');
+  }
+}
+
+const formAddTaskComponent = new FormAddTaskComponent({
+  onClick: handleNewTaskFormSubmit 
+});
+
+render(formAddTaskComponent, formContainer);
 tasksBoardPresenter.init();

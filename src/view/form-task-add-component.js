@@ -19,7 +19,26 @@ function createFormAddTaskComponentTemplate() {
 }
 
 export default class FormAddTaskComponent extends AbstractComponent {
+  #handleClick = null;
+
+  constructor({ onClick }) {
+    super();
+    this.#handleClick = onClick;
+    this.element.addEventListener('submit', this.#submitHandler);
+  }
+
   get template() {
     return createFormAddTaskComponentTemplate();
   }
+
+  #submitHandler = (evt) => {
+    evt.preventDefault();
+    const inputField = this.element.querySelector('#add-task');
+    const taskTitle = inputField.value.trim();
+    if (!taskTitle) {
+      console.warn('Task title cannot be empty');
+      return;
+    }
+    this.#handleClick(taskTitle);
+  };
 }

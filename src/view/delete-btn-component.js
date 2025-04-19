@@ -1,13 +1,36 @@
 import AbstractComponent from '../framework/view/abstract-component.js';
 
-function createDeleteBtnComponentTemplate() {
+function createDeleteBtnComponentTemplate(isDisabled) {
   return (
-    '<button type="submit" class="clear-btn" id="delete-button">Очистить</button>'
+    `<button
+      type="button" // Лучше использовать type="button" если кнопка не отправляет форму
+      class="clear-btn"
+      id="delete-button"
+      ${isDisabled ? 'disabled' : ''} // Добавляем атрибут disabled, если флаг true
+    >
+      Очистить
+    </button>`
   );
 }
 
 export default class DeleteButtonComponent extends AbstractComponent {
-  get template() {
-    return createDeleteBtnComponentTemplate();
+  #handleClick = null;
+  #isDisabled = false;
+
+  constructor({ onClick, isDisabled }) {
+    super();
+    this.#handleClick = onClick;
+    this.#isDisabled = isDisabled;
+
+    this.element.addEventListener('click', this.#clickHandler);
   }
+
+  get template() {
+    return createDeleteBtnComponentTemplate(this.#isDisabled);
+  }
+
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleClick();
+  };
 }
