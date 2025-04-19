@@ -164,6 +164,13 @@ h2 {
     justify-content: center;
 }
 
+.board__no-tasks {
+    text-align: center;
+    font-size: 20px;
+    color: #777;
+    padding: 20px;
+}
+
 @media (max-width: 768px) {
     header {
         padding-top: 15px;

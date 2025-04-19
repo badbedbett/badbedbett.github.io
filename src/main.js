@@ -5,6 +5,7 @@ import TasksModel from './model/task-model.js';
 import {render, RenderPosition} from './framework/render.js';
 
 
+
 const bodyContainer = document.querySelector('.board-app');
 const formContainer = document.querySelector('.add-task');
 const tasksBoardContainer = document.querySelector('.taskboard');
