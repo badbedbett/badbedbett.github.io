@@ -1,22 +1,22 @@
+// src/presenter/tasks-board-presenter.js
+
 import TasksListComponent from '../view/task-list-component.js';
 import TaskComponent from '../view/task-component.js';
 import TaskBoardComponent from '../view/taskboard-component.js';
 import DeleteButtonComponent from '../view/delete-btn-component.js';
 import NoTasksComponent from '../view/no-tasks-component.js';
 import { render, remove } from '../framework/render.js';
-import { Status } from '../const.js';
+import { Status, StatusLabel } from '../const.js';
 
 export default class TasksBoardPresenter {
   #boardContainer = null;
   #tasksModel = null;
   #tasksBoardComponent = new TaskBoardComponent();
-  #noTasksComponent = new NoTasksComponent();
 
   constructor({ boardContainer, tasksModel }) {
     this.#boardContainer = boardContainer;
     this.#tasksModel = tasksModel;
-
-    this.#tasksModel.addObserver(this.#handleModelChange.bind(this));
+    this.#tasksModel.addObserver(this.#handleModelChange);
   }
 
   get tasks() {
@@ -39,21 +39,19 @@ export default class TasksBoardPresenter {
     this.#tasksModel.deleteTasksByStatus(Status.BASKET);
   };
 
-  #renderTasksList(tasks, status, container) {
-    const taskListComponent = new TasksListComponent(status);
-    render(taskListComponent, container);
+  #handleTaskDrop = (draggedTaskId, newStatus, targetTaskId) => {
+    console.log(`[Presenter] Handling drop: Task ${draggedTaskId} to Status ${newStatus}, Target Task: ${targetTaskId}`);
+    this.#tasksModel.moveTask(draggedTaskId, newStatus, targetTaskId);
+  };
 
-    if (tasks.length === 0) {
-      this.#renderNoTasks(taskListComponent.element);
-    } else {
-      tasks.forEach((task) => {
-        this.#renderTask(task, taskListComponent.element);
-      });
-    }
+  #renderTask(task, container) {
+    const taskComponent = new TaskComponent({ task });
+    render(taskComponent, container);
+  }
 
-    if (status === Status.BASKET) {
-      this.#renderDeleteButtonComponent(taskListComponent.element, tasks.length > 0);
-    }
+  #renderNoTasks(container) {
+    const noTasksComponent = new NoTasksComponent();
+    render(noTasksComponent, container);
   }
 
   #renderDeleteButtonComponent(container, hasTasks) {
@@ -64,29 +62,47 @@ export default class TasksBoardPresenter {
     render(deleteButtonComponent, container);
   }
 
-  #renderTask(task, container) {
-    const taskComponent = new TaskComponent({ task });
-    render(taskComponent, container);
-  }
-
-  #renderNoTasks(container) {
-    render(new NoTasksComponent(), container);
-  }
-
   #clearBoard() {
     this.#tasksBoardComponent.element.innerHTML = '';
   }
 
-  #handleModelChange() {
+  #handleModelChange = () => {
     this.#clearBoard();
     this.#renderBoard();
-  }
-  #renderBoard() {
-    render(this.#tasksBoardComponent, this.#boardContainer);
+  };
 
+  #renderBoard() {
+    if (!this.#boardContainer.contains(this.#tasksBoardComponent.element)) {
+      render(this.#tasksBoardComponent, this.#boardContainer);
+    }
+    const currentTasks = this.tasks;
     Object.values(Status).forEach((status) => {
-      const tasksForStatus = this.#tasksModel.getTasksByStatus(status);
-      this.#renderTasksList(tasksForStatus, status, this.#tasksBoardComponent.element);
+      const tasksListComponent = new TasksListComponent({
+        status: status,
+        onTaskDrop: this.#handleTaskDrop.bind(this),
+      });
+
+      render(tasksListComponent, this.#tasksBoardComponent.element);
+
+      const tasksForStatus = currentTasks.filter(task => task.status === status);
+      const listElement = tasksListComponent.element.querySelector('.task-list');
+
+      if (!listElement) {
+        console.error(`Element '.task-list' not found within TaskListComponent for status '${status}'`);
+        return;
+      }
+
+      if (tasksForStatus.length === 0) {
+        this.#renderNoTasks(listElement);
+      } else {
+
+        tasksForStatus.forEach((task) => {
+          this.#renderTask(task, listElement);
+        });
+      }
+      if (status === Status.BASKET) {
+        this.#renderDeleteButtonComponent(tasksListComponent.element, tasksForStatus.length > 0);
+      }
     });
   }
 }

@@ -2,10 +2,10 @@ import AbstractComponent from '../framework/view/abstract-component.js';
 import { StatusLabel } from '../const.js';
 
 function createTaskListTemplate(status) {
-  const statusLabel = StatusLabel[status];
+  const statusLabel = StatusLabel[status] || status;
   return (
-    `<section class="taskboard__list ${status}">
-      <h2 class="task-title ${status}">${statusLabel}</h2>
+    `<section class="column ${status}" data-status="${status}">
+      <h2 class="task-title">${statusLabel}</h2>
       <ul class="task-list"></ul>
     </section>`
   );
@@ -13,13 +13,47 @@ function createTaskListTemplate(status) {
 
 export default class TaskListComponent extends AbstractComponent {
   #status = null;
+  #handleTaskDrop = null;
 
-  constructor(status) {
+  constructor({ status, onTaskDrop }) {
     super();
     this.#status = status;
+    this.#handleTaskDrop = onTaskDrop;
+    this.#addDragDropHandlers();
   }
 
   get template() {
     return createTaskListTemplate(this.#status);
   }
+
+  #addDragDropHandlers() {
+    const element = this.element;
+    element.addEventListener('dragover', this.#handleDragOver);
+    element.addEventListener('drop', this.#handleDrop);
+  }
+
+  #handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
+  #handleDrop = (event) => {
+    event.preventDefault();
+    const draggedTaskId = event.dataTransfer.getData('text/plain');
+
+    const targetTaskElement = event.target.closest('li.task');
+
+    const targetTaskId = targetTaskElement ? targetTaskElement.dataset.taskId : null;
+
+    if (draggedTaskId === targetTaskId) {
+      console.log(`Task ${draggedTaskId} dropped onto itself. Ignoring.`);
+      return;
+    }
+
+    if (draggedTaskId && typeof this.#handleTaskDrop === 'function') {
+      this.#handleTaskDrop(draggedTaskId, this.#status, targetTaskId);
+      console.log(`Task ${draggedTaskId} dropped onto status ${this.#status}. Target task: ${targetTaskId}`);
+    } else {
+      console.warn('Drop event occurred, but taskId or drop handler is missing.');
+    }
+  };
 }

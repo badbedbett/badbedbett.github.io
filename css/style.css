@@ -31,6 +31,13 @@ header {
      margin-bottom: 30px;
 }
 
+.task-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0; 
+    margin-bottom: 0;
+  }
+
 .add-task {
     background: white;
     padding: 30px;
@@ -44,6 +51,7 @@ header {
     gap: 15px;
     align-items: flex-end;
 }
+
 
 .add-task__input-wrapper {
     flex-grow: 1;
