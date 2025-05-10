@@ -1,5 +1,4 @@
 import AbstractComponent from '../framework/view/abstract-component.js';
-
 function createDeleteBtnComponentTemplate(isDisabled) {
   return (
     `<button

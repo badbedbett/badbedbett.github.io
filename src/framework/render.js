@@ -32,7 +32,7 @@ function remove(component) {
   }
 
   if (component.element) {
-    component.element.remove(); // Удаляем элемент из DOM
+    component.element.remove();
     component.removeElement();
   }
 }
